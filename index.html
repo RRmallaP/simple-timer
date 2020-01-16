@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Simple timer</title>
+
+  <style>
+    *{
+      padding: 0;
+      margin: 0;
+    }
+
+    body{
+      width: 100vw;
+      background-color: black;
+      color: white;
+      font-size: 1.5em;
+    }
+
+    body, main{
+      height: 100vh;
+    }
+
+    main{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .form-control + .form-control{
+      margin-top: 1em;
+    }
+
+    .form-control *{
+      font-size: inherit;
+    }
+
+    .form-control button{
+      padding: 0.25em 1em;
+      border-radius: 0.2em;
+      margin: 0 auto;
+    }
+
+    #time-count .prep-timer.show, #time-count .actual-time {
+      display: block;
+      padding: 10px;
+    }
+
+    #time-count .prep-timer {
+      display: none;
+    }
+
+    main.show-time-count #time-count{
+      display: block;
+    }
+
+    main.show-time-count form.timer-form{
+      display: none;
+    }
+
+    form.timer-form{
+      padding: 5px; 
+    }
+
+    #notification{
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+
+    #time-count{
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <div id="time-count">
+      <article class="prep-timer">
+        <h3>Prep time count down</h3>
+        <p>
+          0
+        </p>
+      </article>
+      <article class="actual-time">
+        <h3>Time Update</h3>
+        <p>
+          <span class="minute">00</span>
+          <span class="colon">:</span>
+          <span class="second">00</span>
+        </p>
+      </article>
+
+      <button id="cancel-timer" type="button">Cancel Timer</button>
+    </div>
+
+    <form tabindex="0" class="timer-form">
+      <h2 id="notification"></h2>
+      <div class="form-control">
+        <label for="prep-time">Preperation time</label>
+        <input type="number" min="0" name="prep-time" id="timer-prep">
+      </div>
+      
+      <div class="form-control">
+        <label for="time-input">Time in minute</label>
+        <input type="number" min="0" name="time-input" id="timer">
+      </div>
+  
+      <div class="form-control">
+        <button type="submit">Start</button>
+      </div>    
+    </form>
+
+    <div class="start-sound" style="visibility: hidden;">
+      <audio id="end-audio" src="./audio/tibetian-bell.mp3"></audio>
+      <audio id="start-audio" src="./audio/Metal-Gong.mp3"></audio>
+    </div>
+  </main>
+
+  <script>
+    (() => {
+      let actualTimeout;
+      let prepTimeout;
+      let timeCountInterval;
+      let prepTimeCountInterval;
+      const notificationTag = document.getElementById('notification');
+
+      function startTimer(event) {
+        event.preventDefault();
+        
+        const prepTime = +document.getElementById('timer-prep').value * 1000;
+        const actualTime = +document.getElementById('timer').value * 60 * 1000;
+        const startAudio = document.getElementById('start-audio');
+        const endAudio = document.getElementById('end-audio');
+
+        showPrepTime(prepTime);
+
+        prepTimeout = setTimeout(() => {
+          startAudio.play();
+          showTimer();
+        }, prepTime);
+
+        actualTimeout = setTimeout(() => {
+          endAudio.play();
+          notificationTag.innerText = "Time up!!";
+          terminateTimer();
+        }, prepTime + startAudio.duration * 1000 + actualTime);
+
+      }
+
+      function showTimer() {
+        const timerTag = document.querySelector('.actual-time');
+        const minTag = timerTag.querySelector('.minute');
+        const secondTag = timerTag.querySelector('.second');
+        let minute = 0;
+        let second = 0;
+        minTag.innerHTML = '00';
+        secondTag.innerHTML = '00';
+        
+        timeCountInterval = setInterval(() => {
+          if (second === 59) {
+            ++minute;
+            second = 0;
+          } else {
+            ++second;
+          }
+
+          minTag.innerHTML = minute < 10 ? '0' + minute : minute;
+          secondTag.innerHTML = second < 10 ? '0' + second : second;
+        }, 1000);
+      }
+
+      function showPrepTime(prepTime) {
+        notificationTag.innerText = "";
+        document.getElementsByTagName('main')[0].classList.add('show-time-count');
+        const prepCountdownWrapper = document.getElementsByClassName('prep-timer')[0];
+        prepCountdownWrapper.classList.add('show');
+        const prepCountdownTag = prepCountdownWrapper.querySelector('p');
+        let counter = prepTime/1000;
+        prepCountdownTag.innerHTML = counter;
+        
+        prepTimeCountInterval = setInterval(() => {
+          --counter;
+          prepCountdownTag.innerHTML = counter;
+          
+          if (counter === 0) {
+            clearInterval(prepTimeCountInterval);
+            prepCountdownWrapper.classList.remove('show');
+          }
+        }, 1000);
+
+        const cancelButton = document.getElementById('cancel-timer');
+        cancelButton.addEventListener('click', terminateTimer.bind(null, true));
+      }
+
+      function terminateTimer(cancel) {
+        cancel = cancel || false;
+        actualTimeout && clearTimeout(actualTimeout);
+        prepTimeout && clearTimeout(prepTimeout);
+        timeCountInterval && clearInterval(timeCountInterval);
+        prepTimeCountInterval && clearInterval(prepTimeCountInterval);
+
+        document.querySelector('.prep-timer').classList.remove('show');
+        document.getElementsByTagName('main')[0].classList.remove('show-time-count');
+        
+        const timerTag = document.querySelector('.actual-time');
+        const minTag = timerTag.querySelector('.minute');
+        const secondTag = timerTag.querySelector('.second');
+        minTag.innerHTML = '00';
+        secondTag.innerHTML = '00';
+
+        const cancelButton = document.getElementById('cancel-timer');
+        cancelButton.removeEventListener('click', terminateTimer);
+        notificationTag.innerText = cancel ? "Timer cancelled!!" : "Time up!!";
+      }
+
+      const timerForm = document.querySelector('.timer-form');
+
+      if (timerForm) {
+        timerForm.addEventListener('submit', startTimer);
+      }
+
+    })();
+  </script>
+</body>
+</html>
