@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,9 +8,13 @@
   <title>Simple timer</title>
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
   <nav id="main-nav">
-    <ul><li><a href="counter.html" title="Counter">Counter</a></li></ul>
+    <ul class="menu-list">
+      <li class="menu-item"><a href="index.html" title="Timer">Timer</a></li>
+      <li class="menu-item"><a href="counter.html" title="Counter">Counter</a></li>
+    </ul>
   </nav>
   <main>
     <div id="time-count">
@@ -37,15 +42,15 @@
         <label for="prep-time">Preperation time</label>
         <input type="number" min="0" name="prep-time" id="timer-prep">
       </div>
-      
+
       <div class="form-control">
         <label for="time-input">Time in minute</label>
         <input type="number" min="0" name="time-input" id="timer">
       </div>
-  
+
       <div class="form-control">
         <button type="submit">Start</button>
-      </div>    
+      </div>
     </form>
 
     <div class="start-sound" style="visibility: hidden;">
@@ -64,7 +69,7 @@
 
       function startTimer(event) {
         event.preventDefault();
-        
+
         const prepTime = +document.getElementById('timer-prep').value * 1000;
         const actualTime = +document.getElementById('timer').value * 60 * 1000;
         const startAudio = document.getElementById('start-audio');
@@ -85,7 +90,7 @@
 
       }
 
-      function showTimer() {
+      function showTimer() {
         const timerTag = document.querySelector('.actual-time');
         const minTag = timerTag.querySelector('.minute');
         const secondTag = timerTag.querySelector('.second');
@@ -93,7 +98,7 @@
         let second = 0;
         minTag.innerHTML = '00';
         secondTag.innerHTML = '00';
-        
+
         timeCountInterval = setInterval(() => {
           if (second === 59) {
             ++minute;
@@ -113,13 +118,13 @@
         const prepCountdownWrapper = document.getElementsByClassName('prep-timer')[0];
         prepCountdownWrapper.classList.add('show');
         const prepCountdownTag = prepCountdownWrapper.querySelector('p');
-        let counter = prepTime/1000;
+        let counter = prepTime / 1000;
         prepCountdownTag.innerHTML = counter;
-        
+
         prepTimeCountInterval = setInterval(() => {
           --counter;
           prepCountdownTag.innerHTML = counter;
-          
+
           if (counter === 0) {
             clearInterval(prepTimeCountInterval);
             prepCountdownWrapper.classList.remove('show');
@@ -139,7 +144,7 @@
 
         document.querySelector('.prep-timer').classList.remove('show');
         document.getElementsByTagName('main')[0].classList.remove('show-time-count');
-        
+
         const timerTag = document.querySelector('.actual-time');
         const minTag = timerTag.querySelector('.minute');
         const secondTag = timerTag.querySelector('.second');
@@ -160,4 +165,5 @@
     })();
   </script>
 </body>
+
 </html>
