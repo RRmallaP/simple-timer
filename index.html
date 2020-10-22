@@ -5,80 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Simple timer</title>
-
-  <style>
-    *{
-      padding: 0;
-      margin: 0;
-    }
-
-    body{
-      width: 100vw;
-      background-color: black;
-      color: white;
-      font-size: 1.5em;
-    }
-
-    body, main{
-      height: 100vh;
-    }
-
-    main{
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .form-control + .form-control{
-      margin-top: 1em;
-    }
-
-    .form-control *{
-      font-size: inherit;
-    }
-
-    .form-control button{
-      padding: 0.25em 1em;
-      border-radius: 0.2em;
-      margin: 0 auto;
-    }
-
-    #time-count .prep-timer.show, #time-count .actual-time {
-      display: block;
-      padding: 10px;
-    }
-
-    #time-count .prep-timer {
-      display: none;
-    }
-
-    main.show-time-count #time-count{
-      display: block;
-    }
-
-    main.show-time-count form.timer-form{
-      display: none;
-    }
-
-    form.timer-form{
-      padding: 5px; 
-    }
-
-    #notification{
-      padding: 10px;
-      margin-bottom: 10px;
-    }
-
-    #time-count{
-      display: none;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <nav id="main-nav">
+    <ul><li><a href="counter.html" title="Counter">Counter</a></li></ul>
+  </nav>
   <main>
-    <nav id="main-nav">
-      <ul><li><a href="counter.html" title="Counter">Counter</a></li></ul>
-    </nav>
     <div id="time-count">
       <article class="prep-timer">
         <h3>Prep time count down</h3>

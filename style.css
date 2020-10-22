@@ -1,0 +1,93 @@
+:root {
+  --link-color: #ffeb3b;
+  --link-hover: #fff7b3;
+  --default-space: 16px;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  background-color: black;
+  color: white;
+  font-size: 1.5em;
+}
+
+body {
+  min-height: 100vh;
+}
+
+ul {
+  list-style-type: none;
+}
+
+a {
+  color: var(--link-color);
+  text-decoration: none;
+}
+
+a:hover,
+a:active,
+a:focus {
+  color: var(--link-hover);
+}
+
+nav{
+  margin-bottom: calc(2 * var(--default-space));
+  padding: var(--default-space);
+  display: flex;
+  justify-content: flex-end;
+}
+
+main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.form-control + .form-control {
+  margin-top: 1em;
+}
+
+.form-control * {
+  font-size: inherit;
+}
+
+.form-control button {
+  padding: 0.25em 1em;
+  border-radius: 0.2em;
+  margin: 0 auto;
+}
+
+#time-count .prep-timer.show,
+#time-count .actual-time {
+  display: block;
+  padding: 10px;
+}
+
+#time-count .prep-timer {
+  display: none;
+}
+
+main.show-time-count #time-count {
+  display: block;
+}
+
+main.show-time-count form.timer-form {
+  display: none;
+}
+
+form.timer-form {
+  padding: 5px;
+}
+
+#notification {
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+#time-count {
+  display: none;
+}
